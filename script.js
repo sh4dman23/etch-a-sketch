@@ -1,6 +1,8 @@
 const sketchContainer = document.querySelector('#sketchContainer');
 const pixelBox = document.querySelector('#pixelsPerEdge');
 const setPixelsButton = document.querySelector('#setPixels');
+const resetButton = document.querySelector('#resetSketch');
+
 function generate(pixelsPerEdge) {
     const tempContainer = document.createElement('div');
 
@@ -30,13 +32,18 @@ generate(16);
 sketchContainer.addEventListener('mouseover', (event) => {
     const target = event.target;
     if (target.classList.contains('sketch-pixel')) {
-        target.classList.toggle('black-pixel');
+        target.classList.add('black-pixel');
     }
 });
 
-setPixelsButton.addEventListener('click', (event) => {
+setPixelsButton.addEventListener('click', () => {
     const pixelsPerEdge = pixelBox.value;
     if (pixelsPerEdge > 0 && pixelsPerEdge <= 100) {
         generate(pixelsPerEdge);
     }
+});
+
+resetButton.addEventListener('click', () => {
+    const pixels = sketchContainer.querySelectorAll('.sketch-row > *');
+    pixels.forEach(pixel => pixel.classList.remove('black-pixel'));
 });
