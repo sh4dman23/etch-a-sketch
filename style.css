@@ -1,0 +1,54 @@
+body {
+    box-sizing: border-box;
+}
+
+input[type="text"], input[type="number"] {
+    width: 100%;
+    font-size: 1rem;
+    padding: 4px;
+}
+
+.main-title {
+    text-align: center;
+    margin: 2rem;
+    font-size: 36px;
+}
+
+#main-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+
+#user-controls {
+    margin: 4rem;
+    font-size: larger;
+}
+
+.sketch-container {
+    width: 580px;
+    aspect-ratio: 1/1;
+    margin: 2rem;
+    border: 2px dashed black;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: 0;
+}
+
+.sketch-row {
+    width: 100%;
+    flex: 1 1 calc(100% / 16);
+    display: flex;
+    justify-content: row;
+}
+
+.sketch-pixel {
+    height: 100%;
+    flex: 1 1 calc(100% / 16);
+}
+
+.black-pixel {
+    background-color: black;
+}

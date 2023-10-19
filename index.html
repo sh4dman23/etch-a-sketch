@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="stylesheet" href="./style.css">
+        <script src="./script.js" defer></script>
+        <title>Etch-A-Sketch</title>
+    </head>
+    <body>
+        <h1 class="main-title">Etch-A-Sketch</h1>
+        <div id="main-container">
+            <div id="user-controls">
+                <p>Pixels Per Edge (P x P):</p>
+                <input id="pixelsPerEdge" type="number" autocomplete="off" placeholder="P: " value="16" min="1" max="100">
+                <button id="setPixels">Set Pixels</button>
+            </div>
+            <div id="sketchContainer" class="sketch-container"></div>
+        </div>
+    </body>
+</html>
