@@ -1,5 +1,7 @@
 body {
     box-sizing: border-box;
+    background-color: #c3e0de;
+    color: rgba(0, 0, 0, 0.8);
 }
 
 input[type="text"], input[type="number"] {
@@ -11,30 +13,44 @@ input[type="text"], input[type="number"] {
 .main-title {
     text-align: center;
     margin: 2rem;
-    font-size: 36px;
+    font-size: 48px;
+    color: rgba(9, 9, 9, 0.8);
 }
 
 #main-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: row;
+    flex-wrap: wrap;
 }
 
-#user-controls {
-    margin: 4rem;
+.user-controls {
     font-size: larger;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    background-color: rgba(204, 203, 217, 0.5);
+    padding: 2rem 3rem;
+}
+
+.user-controls:hover {
+    background-color: rgba(162, 162, 168, 0.2);
 }
 
 .sketch-container {
     width: 580px;
     aspect-ratio: 1/1;
     margin: 2rem;
-    border: 2px dashed black;
+    border: 2rem solid rgba(204, 203, 217, 0.5);
+    border-radius: 10px;
     display: flex;
     justify-content: flex-start;
     flex-direction: column;
     gap: 0;
+    user-select: none;
+    -webkit-user-drag: none;
+    background-color: white;
+    box-shadow: 4px 4px rgba(204, 203, 217, 0.5);
 }
 
 .sketch-row {

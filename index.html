@@ -11,13 +11,23 @@
     <body>
         <h1 class="main-title">Etch-A-Sketch</h1>
         <div id="main-container">
-            <div id="user-controls">
-                <p>Pixels Per Edge (P x P):</p>
-                <input id="pixelsPerEdge" type="number" autocomplete="off" placeholder="P: " value="16" min="1" max="100">
-                <button id="setPixels">Set Pixels</button>
-                <button id="resetSketch">Reset</button>
+            <div class="user-controls">
+                <div id="sketchPadControls">
+                    <p>Pixels Per Edge (P x P):</p>
+                    <input id="pixelsPerEdge" type="number" autocomplete="off" placeholder="P: " value="16" min="1" max="100">
+                    <button id="setPixels">Set Pixels</button>
+                    <button id="resetSketch">Reset</button>
+                    <button id="showGrids">Show Grids</button>
+                </div>
+                <div id="brushButtons">
+                    <p>Brush Style</p>
+                    <button id="defaultBrush">Default</button>
+                    <button id="rgbBrush">RGB</button>
+                    <button id="eraser">Eraser</button>
+                </div>
             </div>
             <div id="sketchContainer" class="sketch-container"></div>
         </div>
+        <div class="footer">Made By <a href="https://www.github.com/sh4dman23">Shadman Shahab</a></div>
     </body>
 </html>

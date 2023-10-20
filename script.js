@@ -1,7 +1,12 @@
 const sketchContainer = document.querySelector('#sketchContainer');
-const pixelBox = document.querySelector('#pixelsPerEdge');
-const setPixelsButton = document.querySelector('#setPixels');
-const resetButton = document.querySelector('#resetSketch');
+
+const sketchPadControls = document.querySelector('#sketchPadControls');
+const brushButtonsContainer = document.querySelector('#brushButtons');
+
+// Control sketchpad and brush behaviours
+let showGrids = false;
+let pixelBackgroundColor = 'black';
+let rgbPixels = false;
 
 function generate(pixelsPerEdge) {
     const tempContainer = document.createElement('div');
@@ -18,6 +23,10 @@ function generate(pixelsPerEdge) {
             pixel.classList.add('sketch-pixel');
             pixel.style.flex = flexValue;
 
+            if (showGrids === true) {
+                pixel.style.border = '1px solid rgba(204, 203, 217, 0.5)';
+            }
+
             row.appendChild(pixel);
         }
 
@@ -29,21 +38,74 @@ function generate(pixelsPerEdge) {
 
 generate(16);
 
-sketchContainer.addEventListener('mouseover', (event) => {
+// Keep track of mousedown
+let mouseDown = false;
+sketchContainer.addEventListener('mousedown', event => {
+    mouseDown = true;
+    colorPixel(event);
+});
+sketchContainer.addEventListener('mouseup', () => {
+    mouseDown = false;
+});
+
+// Color pixel if mouse is pressed and is hovering
+sketchContainer.addEventListener('mouseover', colorPixel);
+
+function colorPixel(event) {
+    const pixel = event.target;
+    if (pixel.classList.contains('sketch-pixel') && mouseDown) {
+        // If RGB mode is on the pixels should have random colors
+        if (rgbPixels === true) {
+            function generateRandomRGB() {
+                return Math.floor(Math.random() * 255);
+            }
+            pixelBackgroundColor = `rgb(${generateRandomRGB()}, ${generateRandomRGB()}, ${generateRandomRGB()})`;
+        }
+        pixel.style.backgroundColor = pixelBackgroundColor;
+    }
+}
+
+// Change sketch pad pixels, reset pixels and show grids
+sketchPadControls.addEventListener('click', event => {
     const target = event.target;
-    if (target.classList.contains('sketch-pixel')) {
-        target.classList.add('black-pixel');
+
+    // Pixels per Edge
+    if (target.id === 'setPixels') {
+        const pixelBox = document.querySelector('#pixelsPerEdge');
+        const pixelsPerEdge = pixelBox.value;
+        if (pixelsPerEdge > 0 && pixelsPerEdge <= 100) {
+            generate(pixelsPerEdge);
+        }
+
+        return;
+
+    // Reset
+    } else if (target.id === 'resetSketch') {
+        const pixels = sketchContainer.querySelectorAll('.sketch-pixel');
+        pixels.forEach(pixel => pixel.style.backgroundColor = 'inherit');
+
+    // Grids
+    } else if (target.id === 'showGrids') {
+        const pixels = sketchContainer.querySelectorAll('.sketch-pixel');
+        if (showGrids === false) {
+            pixels.forEach(pixel => pixel.style.border = '1px solid rgba(204, 203, 217, 0.5)');
+            showGrids = true;
+        } else {
+            pixels.forEach(pixel => pixel.style.border = 'none');
+            showGrids = false;
+        }
     }
 });
 
-setPixelsButton.addEventListener('click', () => {
-    const pixelsPerEdge = pixelBox.value;
-    if (pixelsPerEdge > 0 && pixelsPerEdge <= 100) {
-        generate(pixelsPerEdge);
-    }
-});
+// Change brush styles (default, rgb, eraser)
+brushButtonsContainer.addEventListener('click', event => {
+    const target = event.target;
 
-resetButton.addEventListener('click', () => {
-    const pixels = sketchContainer.querySelectorAll('.sketch-row > *');
-    pixels.forEach(pixel => pixel.classList.remove('black-pixel'));
+    if (target.id === 'defaultBrush') {
+        pixelBackgroundColor = 'black';
+    } else if (target.id === 'eraser') {
+        pixelBackgroundColor = 'inherit';
+    }
+
+    rgbPixels = (target.id === 'rgbBrush') ? true : false;
 });
