@@ -1,7 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap');
+
 body {
     box-sizing: border-box;
     background-color: #c3e0de;
     color: rgba(0, 0, 0, 0.8);
+    font-family: 'Roboto', sans-serif;
 }
 
 input[type="text"], input[type="number"] {
@@ -36,6 +39,7 @@ button:active {
     text-align: center;
     margin: 2rem;
     font-size: 48px;
+    font-weight: 900;
     color: rgba(9, 9, 9, 0.8);
 }
 
@@ -53,6 +57,10 @@ button:active {
     border-radius: 10px;
     background-color: rgba(204, 203, 217, 0.5);
     padding: 2rem 3rem;
+}
+
+.user-controls p {
+    font-weight: 700;
 }
 
 .user-controls:hover {

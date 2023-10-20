@@ -68,12 +68,19 @@ sketchContainer.addEventListener('mouseover', colorPixel);
 function colorPixel(event) {
     const pixel = event.target;
     if (pixel.classList.contains('sketch-pixel') && mouseDown) {
-        // If RGB mode is on the pixels should have random colors
-        if (rgbPixels === true && !darkeningMode && !lighteningMode) {
-            function generateRandomRGB() {
-                return Math.floor(Math.random() * 255);
+        if (!darkeningMode && !lighteningMode) {
+            // Reset shading level on pixel
+            darkenlevel[pixel.getAttribute('pixelno')] = 0;
+
+            // If RGB mode is on the pixels should have random colors
+            if (rgbPixels === true) {
+                function generateRandomRGB() {
+                    return Math.floor(Math.random() * 255);
+                }
+                pixelBackgroundColor = `rgb(${generateRandomRGB()}, ${generateRandomRGB()}, ${generateRandomRGB()})`;
             }
-            pixelBackgroundColor = `rgb(${generateRandomRGB()}, ${generateRandomRGB()}, ${generateRandomRGB()})`;
+
+        // Shading mode is on
         } else if (darkeningMode === true || lighteningMode === true) {
             const pixelNo = pixel.getAttribute('pixelno');
 
@@ -81,10 +88,18 @@ function colorPixel(event) {
             const pixelRGB = [];
             const colorsArray = backgroundColor.split(',');
 
-            if (true && darkenlevel[pixelNo] < 10) {
+            // For darkening mode, we need to increase darkenlevel of the pixel
+            if (darkeningMode && darkenlevel[pixelNo] < 10) {
                 darkenlevel[pixelNo]++;
-            } else if (lighteningMode && darkenlevel[a] > 0) {
-                darkenlevel[pixelNo]--;
+
+            // For lightening mode, we need to decrese it
+            } else if (lighteningMode) {
+                if (darkenlevel[pixelNo] >= 0) {
+                    darkenlevel[pixelNo] = 0;
+                }
+                if (darkenlevel[pixelNo] > -10) {
+                    darkenlevel[pixelNo]--;
+                }
             }
 
             // Red
@@ -97,14 +112,17 @@ function colorPixel(event) {
             pixelRGB[2] = Number(colorsArray[2].trim().split(')')[0]);
 
             for (let i = 0; i < pixelRGB.length; i++) {
-                pixelRGB[i] = darkeningMode ? Math.floor(pixelRGB[i] * (1 - darkenlevel[pixelNo] / 10))
+                let newRGBValue;
 
-                            // If lightening mode is on and rgb value is 0, we will need to
-                            : pixelRGB[i] === 0 ? Math.floor(255 / 10)
-                            : Math.floor(pixelRGB[i] * (1 + darkenlevel[pixelNo] / 10));
+                // If lightening mode is on and color is black, we need to set the pixel value of 90% black
+                if (lighteningMode && pixelRGB[i] === 0) {
+                    newRGBValue = Math.floor(255 / 10);
+                } else {
+                    newRGBValue = Math.floor(pixelRGB[i] * (1 - darkenlevel[pixelNo] / 10));
+                }
 
                 // If new pixel exceeds 255
-                pixelRGB[i] = pixelRGB[i] > 255 ? 255 : pixelRGB[i];
+                pixelRGB[i] = newRGBValue > 255 ? 255 : newRGBValue;
             };
 
             pixelBackgroundColor = `rgb(${pixelRGB[0]}, ${pixelRGB[1]}, ${pixelRGB[2]})`;
@@ -132,7 +150,10 @@ sketchPadControls.addEventListener('click', event => {
     // Reset
     } else if (target.id === 'resetSketch') {
         const pixels = sketchContainer.querySelectorAll('.sketch-pixel');
-        pixels.forEach(pixel => pixel.style.backgroundColor = 'rgb(255, 255, 255)');
+        pixels.forEach(pixel => {
+            pixel.style.backgroundColor = 'rgb(255, 255, 255)';
+            darkenlevel[pixel.getAttribute('pixelno')] = 0;
+        });
 
     // Grids
     } else if (target.id === 'showGrids') {
