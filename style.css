@@ -10,6 +10,28 @@ input[type="text"], input[type="number"] {
     padding: 4px;
 }
 
+button {
+    padding: 8px 10px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+}
+
+button:hover {
+    box-shadow: 2px 2px rgb(204, 203, 217);
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(2px);
+}
+
+.button-toggled-on {
+    background-color: rgba(140, 163, 194, 0.8);
+}
+
 .main-title {
     text-align: center;
     margin: 2rem;
@@ -53,6 +75,10 @@ input[type="text"], input[type="number"] {
     box-shadow: 4px 4px rgba(204, 203, 217, 0.5);
 }
 
+.sketch-container:hover {
+    border-color: rgba(162, 162, 168, 0.2);
+}
+
 .sketch-row {
     width: 100%;
     flex: 1 1 calc(100% / 16);
@@ -67,4 +93,9 @@ input[type="text"], input[type="number"] {
 
 .black-pixel {
     background-color: black;
+}
+
+.footer {
+    text-align: center;
+    margin: 2rem;
 }

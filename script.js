@@ -36,7 +36,7 @@ function generate(pixelsPerEdge) {
     sketchContainer.innerHTML = tempContainer.innerHTML;
 }
 
-generate(16);
+generate(24);
 
 // Keep track of mousedown
 let mouseDown = false;
@@ -94,6 +94,7 @@ sketchPadControls.addEventListener('click', event => {
             pixels.forEach(pixel => pixel.style.border = 'none');
             showGrids = false;
         }
+        target.classList.toggle('button-toggled-on');
     }
 });
 
@@ -103,9 +104,22 @@ brushButtonsContainer.addEventListener('click', event => {
 
     if (target.id === 'defaultBrush') {
         pixelBackgroundColor = 'black';
+        rgbPixels = false;
     } else if (target.id === 'eraser') {
         pixelBackgroundColor = 'inherit';
+        rgbPixels = false;
+    } else if (target.id === 'rgbBrush') {
+        rgbPixels = true;
     }
 
-    rgbPixels = (target.id === 'rgbBrush') ? true : false;
+    let buttons = target.parentNode.children;
+    buttons = Array.from(buttons);
+    buttons.forEach(button => {
+        if (button.id !== target.id) {
+            button.classList.remove('button-toggled-on');
+        }
+        if (target.tagName === 'BUTTON') {
+            target.classList.add('button-toggled-on');
+        }
+    });
 });
