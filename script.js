@@ -5,8 +5,13 @@ const brushButtonsContainer = document.querySelector('#brushButtons');
 
 // Control sketchpad and brush behaviours
 let showGrids = false;
-let pixelBackgroundColor = 'black';
+let pixelBackgroundColor = 'rgb(0, 0, 0)';
 let rgbPixels = false;
+let darkeningMode = false;
+let lighteningMode = false;
+
+// Array for managing shading on pixels
+const darkenlevel = [];
 
 function generate(pixelsPerEdge) {
     const tempContainer = document.createElement('div');
@@ -22,10 +27,18 @@ function generate(pixelsPerEdge) {
             const pixel = document.createElement('div');
             pixel.classList.add('sketch-pixel');
             pixel.style.flex = flexValue;
+            pixel.style.backgroundColor = 'rgb(255, 255, 255)';
 
             if (showGrids === true) {
                 pixel.style.border = '1px solid rgba(204, 203, 217, 0.5)';
             }
+
+            // Add a count to the pixel
+            const pixelNo = parseInt((i + 1) * (j + 1));
+            pixel.setAttribute('pixelno', pixelNo);
+
+            // Set shading values to 0
+            darkenlevel[pixelNo] = 0;
 
             row.appendChild(pixel);
         }
@@ -37,6 +50,7 @@ function generate(pixelsPerEdge) {
 }
 
 generate(24);
+document.querySelector('#defaultBrush').classList.toggle('button-toggled-on');
 
 // Keep track of mousedown
 let mouseDown = false;
@@ -55,12 +69,48 @@ function colorPixel(event) {
     const pixel = event.target;
     if (pixel.classList.contains('sketch-pixel') && mouseDown) {
         // If RGB mode is on the pixels should have random colors
-        if (rgbPixels === true) {
+        if (rgbPixels === true && !darkeningMode && !lighteningMode) {
             function generateRandomRGB() {
                 return Math.floor(Math.random() * 255);
             }
             pixelBackgroundColor = `rgb(${generateRandomRGB()}, ${generateRandomRGB()}, ${generateRandomRGB()})`;
+        } else if (darkeningMode === true || lighteningMode === true) {
+            const pixelNo = pixel.getAttribute('pixelno');
+
+            const backgroundColor = pixel.style.backgroundColor;
+            const pixelRGB = [];
+            const colorsArray = backgroundColor.split(',');
+
+            if (true && darkenlevel[pixelNo] < 10) {
+                darkenlevel[pixelNo]++;
+            } else if (lighteningMode && darkenlevel[a] > 0) {
+                darkenlevel[pixelNo]--;
+            }
+
+            // Red
+            pixelRGB[0] = Number(colorsArray[0].trim().split('(')[1]);
+
+            // Green
+            pixelRGB[1] = Number(colorsArray[1].trim());
+
+            // Blue
+            pixelRGB[2] = Number(colorsArray[2].trim().split(')')[0]);
+
+            for (let i = 0; i < pixelRGB.length; i++) {
+                pixelRGB[i] = darkeningMode ? Math.floor(pixelRGB[i] * (1 - darkenlevel[pixelNo] / 10))
+
+                            // If lightening mode is on and rgb value is 0, we will need to
+                            : pixelRGB[i] === 0 ? Math.floor(255 / 10)
+                            : Math.floor(pixelRGB[i] * (1 + darkenlevel[pixelNo] / 10));
+
+                // If new pixel exceeds 255
+                pixelRGB[i] = pixelRGB[i] > 255 ? 255 : pixelRGB[i];
+            };
+
+            pixelBackgroundColor = `rgb(${pixelRGB[0]}, ${pixelRGB[1]}, ${pixelRGB[2]})`;
         }
+
+        // Background color can get changed in event listeners below
         pixel.style.backgroundColor = pixelBackgroundColor;
     }
 }
@@ -82,7 +132,7 @@ sketchPadControls.addEventListener('click', event => {
     // Reset
     } else if (target.id === 'resetSketch') {
         const pixels = sketchContainer.querySelectorAll('.sketch-pixel');
-        pixels.forEach(pixel => pixel.style.backgroundColor = 'inherit');
+        pixels.forEach(pixel => pixel.style.backgroundColor = 'rgb(255, 255, 255)');
 
     // Grids
     } else if (target.id === 'showGrids') {
@@ -102,14 +152,29 @@ sketchPadControls.addEventListener('click', event => {
 brushButtonsContainer.addEventListener('click', event => {
     const target = event.target;
 
-    if (target.id === 'defaultBrush') {
-        pixelBackgroundColor = 'black';
+    if (target.id !== 'rgbBrush') {
         rgbPixels = false;
-    } else if (target.id === 'eraser') {
-        pixelBackgroundColor = 'inherit';
-        rgbPixels = false;
+
+        if (target.id !== 'darkenBrush' && target.id !== 'lightenBrush') {
+            if (target.id === 'defaultBrush') {
+                pixelBackgroundColor = 'rgb(0, 0, 0)';
+            } else if (target.id === 'eraser') {
+                pixelBackgroundColor = 'rgb(255, 255, 255)';
+            }
+
+            darkeningMode = false;
+            lighteningMode = false;
+        } else if (target.id === 'darkenBrush') {
+            darkeningMode = true;
+            lighteningMode = false;
+        } else if (target.id === 'lightenBrush') {
+            lighteningMode = true;
+            darkeningMode = false;
+        }
     } else if (target.id === 'rgbBrush') {
         rgbPixels = true;
+        darkeningMode = false;
+        lighteningMode = false;
     }
 
     let buttons = target.parentNode.children;
