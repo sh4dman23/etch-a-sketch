@@ -89,8 +89,13 @@ function colorPixel(event) {
             const colorsArray = backgroundColor.split(',');
 
             // For darkening mode, we need to increase darkenlevel of the pixel
-            if (darkeningMode && darkenlevel[pixelNo] < 10) {
-                darkenlevel[pixelNo]++;
+            if (darkeningMode) {
+                if (darkenlevel[pixelNo] < 0) {
+                    darkenlevel = 0;
+                }
+                if (darkenlevel[pixelNo] < 10) {
+                    darkenlevel[pixelNo]++;
+                }
 
             // For lightening mode, we need to decrese it
             } else if (lighteningMode) {
