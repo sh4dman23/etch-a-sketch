@@ -91,7 +91,7 @@ function colorPixel(event) {
             // For darkening mode, we need to increase darkenlevel of the pixel
             if (darkeningMode) {
                 if (darkenlevel[pixelNo] < 0) {
-                    darkenlevel = 0;
+                    darkenlevel[pixelNo] = 0;
                 }
                 if (darkenlevel[pixelNo] < 10) {
                     darkenlevel[pixelNo]++;
